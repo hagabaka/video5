@@ -114,10 +114,18 @@ function replaceFlashObjectWithVideo(obj, params) {
   });
 
   if (params.watchUrl) {
-    controls.append(jQuery('<a class="v5-goto" href="' + params.watchUrl + '">'));
+    controls.append(
+      jQuery('<a class="v5-goto" href="' + params.watchUrl + '">').css({
+        "background-image": "url(" + chrome.extension.getURL("tv.png") + ")"
+      })
+    );
   }
   if (params.downloadUrl) {
-    controls.append(jQuery('<a class="v5-download" href="' + params.downloadUrl + '">'));
+    controls.append(
+      jQuery('<a class="v5-download" href="' + params.downloadUrl + '">').css({
+        "background-image": "url(" + chrome.extension.getURL("download.png") + ")"
+      })
+    );
   }
   wrapper.append(controls);
 }
