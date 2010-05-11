@@ -32,8 +32,10 @@ To add support for a new embed player,
      // Define start() to determine the video URL and other information, and
      // call the callback
      FooVideo.prototype.start = function() {
-       // ... determine videoUrl
-       this.callback({videoUrl: videoUrl});
+       // ... determine videoUrl, and optionally, watchUrl and downloadUrl
+       this.callback({videoUrl: videoUrl,
+                      watchUrl: watchUrl,
+                      downloadUrl: downloadUrl});
      }
 
 2. Modify manifest.json to include your new .js file::
