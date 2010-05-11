@@ -5,7 +5,10 @@ JWPlayerVideo = function(domObject, url, callback) {
 };
 
 JWPlayerVideo.canHandleURL = function(url) {
-  return url.match(/jwplayer/)
+  // JWPlayer can be installed with any name by the webmaster; usually it would
+  // probably match "jwplayer", but a certain site uses "player.swf", and there
+  // are probably other variants not matched here...
+  return url.match(/jwplayer|player\.swf/)
 };
 
 JWPlayerVideo.prototype.start = function() {
