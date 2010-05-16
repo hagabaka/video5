@@ -26,7 +26,7 @@ JWPlayerVideo.prototype.start = function() {
   var image = JWPlayerVideo.flashVar(assignments, "image"),
       file = JWPlayerVideo.flashVar(assignments, "file");
 
-  if(file) {
+  if(file && /\.(?:mp4|m4v|f4v|ogg|ogv)$/.test(file)) {
     this.callback({videoUrl: file, downloadUrl: file});
   }
 };
