@@ -10,6 +10,12 @@ jQuery(function() {
   jQuery('object, embed').each(function() {
     lookForFlashVideos(this);
   });
+
+  jQuery('<link>', {
+    rel: 'stylesheet',
+    type: 'text/css',
+    href: chrome.extension.getURL('video5.css')
+  }).appendTo('head');
 });
 
 function lookForFlashVideos(elem) {
