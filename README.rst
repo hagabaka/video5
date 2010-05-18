@@ -4,6 +4,25 @@ Video5
 Extension for Google Chrome to replace video providers embedded Flash players with 
 standard HTML5 video tags.
 
+Supported
+---------
+
+* Youtube
+
+  Youtube.com pages are not modified. You should try `Youtube HTML5 Beta
+  <http://www.youtube.com/html5>`_. Youtube videos embedded on other web pages
+  are supported.
+
+* JWPlayer
+
+  JWPlayer embedding MP4 and OGV files are supported.
+
+* Vimeo
+
+  Vimeo.com pages are not modified. You should try `Vimeo HTML5 Beta
+  <http://vimeo.com/blog:268>`_ (click on the "Switch to HTML5 Player" link
+  below any video). Vimeo videos embedded on other web pages are supported.
+
 Extending
 ---------
 
