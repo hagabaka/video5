@@ -1,4 +1,4 @@
-var VideoHandlers = [YouTubeVideo, JWPlayerVideo];
+var VideoHandlers = [YouTubeVideo, JWPlayerVideo, VimeoVideo];
 
 jQuery(window).bind('DOMNodeInserted', function(e) {
   jQuery('object, embed', e.target).each(function() {
