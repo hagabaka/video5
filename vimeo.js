@@ -16,6 +16,6 @@ VimeoVideo.prototype.canHandle = function() {
 
 VimeoVideo.prototype.start = function() {
   var videoUrl = 'http://vimeo.com/play_redirect?clip_id=' + this.clipId;
-  this.callback({videoUrl: videoUrl, watchUrl: this.watchUrl, downloadUrl: videoUrl});
+  this.callback({videoUrl: videoUrl, watchUrl: this.watchUrl});
 };
 
