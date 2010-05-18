@@ -61,7 +61,7 @@ To add support for a new embed player,
      "js": ["jquery.js", "youtube.js", "jwplayer.js", "foo.js", "video5.js"],
                                                       ^^^^^^^^^^
 
-2. Modify video5.js to include your new class::
+3. Modify video5.js to include your new class::
    
      var VideoHandlers = [YouTubeVideo, JWPlayerVideo, FooVideo];
                                                      ^^^^^^^^^^
