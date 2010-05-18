@@ -19,14 +19,13 @@ To add support for a new embed player,
        this.domObject = domObject;
        this.url = url;
        this.callback = callback;
+       // ... any other needed initializatio
      };
 
-     // Define canHandleURL() to filter the player URL you support
-     // This might not make much sense for players which webmasters install to
-     // their sites and can name arbitrarily. More advanced filtering mechanism
-     // might be needed in the future.
-     FooVideo.canHandleURL = function(url) {
-       return url.match(/foo/)
+     // Define canHandleURL() to filter the Flash instances you support
+     FooVideo.prototype.canHandle = function() {
+       // determine whether you can handle the passed DOM Object and URL, and
+       // return the answer as a boolean
      };
 
      // Define start() to determine the video URL and other information, and

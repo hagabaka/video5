@@ -2,32 +2,28 @@ JWPlayerVideo = function(domObject, url, callback) {
   this.domObject = domObject;
   this.url = url;
   this.callback = callback;
+
+  this.getFlashVars();
 };
 
-JWPlayerVideo.canHandleURL = function(url) {
-  // JWPlayer can be installed with any name by the webmaster; usually it would
-  // probably match "jwplayer", but a certain site uses "player.swf", and there
-  // are probably other variants not matched here...
-  return url.match(/jwplayer|player\.swf/)
+JWPlayerVideo.prototype.getFlashVars = function() {
+  var flashvars = this.domObject.attr("flashvars")
+               || this.domObject.children().filter("param[name=flashvars]").attr("value");
+
+  if (flashvars) {
+    var assignments = flashvars.split("&");
+    this.image = JWPlayerVideo.flashVar(assignments, "image");
+    this.file = JWPlayerVideo.flashVar(assignments, "file");
+  }
+}
+
+JWPlayerVideo.prototype.canHandle = function() {
+  return this.file && true;
 };
 
 JWPlayerVideo.prototype.start = function() {
-  var flashvars = this.domObject.attr("flashvars");
-  if (!flashvars) {
-    param = this.domObject.children().filter("param[name=flashvars]");
-    if (param) {
-      flashvars = param.attr("value");
-    } else {
-      return;
-    }
-  }
-
-  var assignments = flashvars.split("&");
-  var image = JWPlayerVideo.flashVar(assignments, "image"),
-      file = JWPlayerVideo.flashVar(assignments, "file");
-
-  if(file && /\.(?:mp4|m4v|f4v|ogg|ogv)$/.test(file)) {
-    this.callback({videoUrl: file, downloadUrl: file});
+  if(this.file && /\.(?:mp4|m4v|f4v|ogg|ogv)$/.test(this.file)) {
+    this.callback({videoUrl: this.file, downloadUrl: this.file});
   }
 };
 

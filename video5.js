@@ -87,11 +87,10 @@ function handleObjectTag(obj) {
 function handleTagAndURL(obj, url) {
   for (var idx = 0; idx < VideoHandlers.length; idx++) {
     var videoHandler = VideoHandlers[idx];
-    
-    if (videoHandler.canHandleURL(url)) {
-      var vh = new videoHandler(obj, url, function(params) {
-        replaceFlashObjectWithVideo(obj, params);
-      });
+    var vh = new videoHandler(obj, url, function(params) {
+      replaceFlashObjectWithVideo(obj, params);
+    });
+    if (vh.canHandle()) {
       vh.start();
       break;
     }
