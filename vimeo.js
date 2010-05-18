@@ -3,10 +3,11 @@ VimeoVideo = function(domObject, url, callback) {
   this.url = url;
   this.callback = callback;
 
-  this.clipId = /^http:\/\/(?:www.)?vimeo.com\/.+clip_id=(\d+)/.exec(this.url)[1];
-
-  if (this.clipId)
+  var match = /^http:\/\/(?:www.)?vimeo.com\/.+clip_id=(\d+)/.exec(this.url);
+  if (match) {
+    this.clipId = match[1];
     this.watchUrl = 'http://vimeo.com/' + this.clipId;
+  }
 };
 
 VimeoVideo.prototype.canHandle = function() {
