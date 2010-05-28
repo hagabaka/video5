@@ -35,7 +35,7 @@
     display: block;
     width: 19px;
     height: 24px;
-    background-image: url(download.png);
+    background-image: url(chrome-extension://__MSG_@@extension_id__/download.png);
     margin-right: 4px;
 }
 
@@ -44,6 +44,6 @@
     float: right;
     width: 24px;
     height: 24px;
-    background-image: url(tv.png);
+    background-image: url(chrome-extension://__MSG_@@extension_id__/tv.png);
     margin-left: 23px;
 }
