@@ -1,7 +1,8 @@
-JWPlayerVideo = function(domObject, url, callback) {
+(function() {
+
+JWPlayerVideo = function(domObject, url) {
   this.domObject = domObject;
   this.url = url;
-  this.callback = callback;
 
   this.getFlashVars();
 };
@@ -23,7 +24,8 @@ JWPlayerVideo.prototype.canHandle = function() {
 
 JWPlayerVideo.prototype.start = function() {
   if(this.file && /\.(?:mp4|m4v|f4v|ogg|ogv)$/.test(this.file)) {
-    this.callback({videoUrl: this.file, downloadUrl: this.file});
+    VideoHandlers.replaceFlashObjectWithVideo(this.domObject, this.file,
+                                              {downloadURL: this.file});
   }
 };
 
@@ -40,3 +42,7 @@ JWPlayerVideo.flashVar = function(assignments, name) {
   });
   return result;
 };
+
+return JWPlayerVideo;
+
+})

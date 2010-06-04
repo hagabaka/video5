@@ -1,8 +1,9 @@
 Video5
 ======
 
-Extension for Google Chrome to replace video providers embedded Flash players with 
-standard HTML5 video tags.
+Extension for Google Chrome to replace video providers embedded Flash
+players with standard HTML5 video tags.
+
 
 Supported
 ---------
@@ -10,8 +11,8 @@ Supported
 * Youtube
 
   Youtube.com pages are not modified. You should try `Youtube HTML5 Beta
-  <http://www.youtube.com/html5>`_. Youtube videos embedded on other web pages
-  are supported.
+  <http://www.youtube.com/html5>`_. Youtube videos embedded on other web
+  pages are supported.
 
 * JWPlayer
 
@@ -23,48 +24,64 @@ Supported
   <http://vimeo.com/blog:268>`_ (click on the "Switch to HTML5 Player" link
   below any video). Vimeo videos embedded on other web pages are supported.
 
+
 Extending
 ---------
 
-To add support for a new embed player,
+To add support for a new video player provider,
 
-1. Create a new .js file, modeled after youtube.js or jwplayer.js.  Specifically,
-   say you are supporting "FooVideo"::
+1. Create a new .js file inside the handlers subdirectory, modeled after
+   youtube.js or any other file in that directory.  Specifically, say you are
+   supporting "FooVideo" in foo.js::
 
+     // Your file MUST be wrapped in a function, and you MUST return your
+     // handler object at the end of your function.
+     (function() {
+     
      // The constructor is passed the DOM object for the Flash plugin, the url
-     // of the player, and a callback which will build the video element and
-     // replace the Flash plugin with it.
-     FooVideo = function(domObject, url, callback) {
+     // of the player.
+     FooVideo = function(domObject, url) {
        this.domObject = domObject;
        this.url = url;
-       this.callback = callback;
-       // ... any other needed initializatio
      };
 
-     // Define canHandleURL() to filter the Flash instances you support
+     // Define canHandle() to filter Flash plugins you support
      FooVideo.prototype.canHandle = function() {
-       // determine whether you can handle the passed DOM Object and URL, and
-       // return the answer as a boolean
+       return this.url.match(/foo/);
      };
 
-     // Define start() to determine the video URL and other information, and
-     // call the callback
+     // This is the “entry point” for your handler, from this point you can
+     // do whatever your handler need to do to get the video final URL.
      FooVideo.prototype.start = function() {
-       // ... determine videoUrl, and optionally, watchUrl and downloadUrl
-       this.callback({videoUrl: videoUrl,
-                      watchUrl: watchUrl,
-                      downloadUrl: downloadUrl});
+       // ...
+       // You can send a request to the background page in case you need to
+       // fetch external resources using XHR.
+       chrome.extension.sendRequest({action: 'ajax',
+         args: {
+           type: 'GET',
+           url: myUrl
+       }}, function(response) {
+         /* do something with response.data and response.textStatus */
+       });
+       // ...
+       // Invoke VideoHandlers.replaceFlashObjectWithVideo providing the
+       // DOM object to substitute and the video URL to use. You can also
+       // provide a watchURL and a downloadURL that will create links in the
+       // interface for those actions.
+       VideoHandlers.replaceFlashObjectWithVideo(this.domObject,
+         videoURL,
+         { watchURL: watchURL, downloadURL: downloadURL });
      }
+     
+     // This is the end, so return your handler object
+     return FooVideo;
+     })
 
-2. Modify manifest.json to include your new .js file::
+2. Modify video5.js to include your new handler::
    
-     "js": ["jquery.js", "youtube.js", "jwplayer.js", "foo.js", "video5.js"],
-                                                      ^^^^^^^^^^
+     VideoHandlers.register('youtube', 'foo');
+                                       ^^^^^
 
-3. Modify video5.js to include your new class::
-   
-     var VideoHandlers = [YouTubeVideo, JWPlayerVideo, FooVideo];
-                                                     ^^^^^^^^^^
 
 Authors
 -------
@@ -73,5 +90,6 @@ Daniel Rodríguez Troitiño (drodriguez)
   Original implementation including Youtube support
 
 Yaohan Chen (hagabaka)
-  JWPlayer support
+  Ideas and supporting code about the splitting the handlers code.
+  JWPlayer and Vimeo support.
 

@@ -1,4 +1,63 @@
-var VideoHandlers = [YouTubeVideo, JWPlayerVideo, VimeoVideo];
+var VideoHandlers = {
+  handlers: [],
+  
+  register: function() {
+    for (var idx in arguments) {
+      var url = chrome.extension.getURL('handlers/' + arguments[idx] + '.js');
+      chrome.extension.sendRequest({action: 'ajax',
+        args: {
+          type: 'GET',
+          url: url
+      }}, function(response) {
+        var handler = eval(response.data + '()');
+        if (handler) {
+          VideoHandlers.handlers.push(handler);
+        }
+      });
+    }
+  },
+  
+  handleTagAndURL: function(obj, url) {
+    for (var idx = 0; idx < this.handlers.length; idx++) {
+      var videoHandler = this.handlers[idx];
+
+      var vh = new videoHandler(obj, url);
+      if (vh.canHandle()) {
+        vh.start();
+        break;
+      }
+    }
+  },
+  
+  replaceFlashObjectWithVideo: function(domObject, videoUrl, options) {
+    var videoTag = jQuery('<video controls="controls" width="100%">').attr(
+                          'src', videoUrl),
+        wrapper  = jQuery('<div class="v5-wrapper">'),
+        controls = jQuery('<div class="v5-controls">');
+    wrapper.append(videoTag);
+    domObject.replaceWith(wrapper);
+    wrapper.css({
+      'width': videoTag.width(),
+      'height': videoTag.height()
+    });
+
+    videoTag.bind('loadedmetadata', function(e) {
+      wrapper.css({
+        'width': videoTag.width(),
+        'height': videoTag.height()
+      });
+    });
+
+    if (options.watchURL) {
+      controls.append(jQuery('<a class="v5-goto" href="' + options.watchURL + '">'));
+    }
+    if (options.downloadURL) {
+      controls.append(jQuery('<a class="v5-download" href="' + options.downloadURL + '">'));
+    }
+    wrapper.append(controls);
+  }
+};
+VideoHandlers.register('youtube', 'vimeo', 'jwplayer');
 
 jQuery(window).bind('DOMNodeInserted', function(e) {
   jQuery('object, embed', e.target).each(function() {
@@ -62,7 +121,7 @@ function lookForFlashVideos(elem) {
 function handleEmbedTag(obj) {
   if (obj.attr('src') !== undefined &&
       obj.attr('type') == 'application/x-shockwave-flash') {
-    handleTagAndURL(obj, obj.attr('src'));
+    VideoHandlers.handleTagAndURL(obj, obj.attr('src'));
   }
 }
 
@@ -71,59 +130,16 @@ function handleObjectTag(obj) {
     if (obj.attr('data') !== undefined &&
         obj.attr('type') == 'application/x-shockwave-flash') {
       obj.attr('data-video5-visited', 'yes');
-      handleTagAndURL(obj, obj.attr('data'));
+      VideoHandlers.handleTagAndURL(obj, obj.attr('data'));
     } else {
       var children = obj.children('embed');
       if (children.length > 0 &&
           children.attr('src') !== undefined &&
           children.attr('type') == 'application/x-shockwave-flash') {
         obj.attr('data-video5-visited', 'yes');
-        handleTagAndURL(obj, children.attr('src'));
+        VideoHandlers.handleTagAndURL(obj, children.attr('src'));
       }
     }
   }
-}
-
-function handleTagAndURL(obj, url) {
-  for (var idx = 0; idx < VideoHandlers.length; idx++) {
-    var videoHandler = VideoHandlers[idx];
-    var vh = new videoHandler(obj, url, function(params) {
-      replaceFlashObjectWithVideo(obj, params);
-    });
-    if (vh.canHandle()) {
-      vh.start();
-      break;
-    }
-  }
-}
-
-function replaceFlashObjectWithVideo(obj, params) {
-  var videoTag = jQuery('<video controls="controls" width="100%">').attr(
-                        'src', params.videoUrl),
-      wrapper  = jQuery('<div class="v5-wrapper">'),
-      controls = jQuery('<div class="v5-controls">');
-
-  wrapper.append(videoTag);
-  obj.replaceWith(wrapper);
-
-  wrapper.css({
-    'width': videoTag.width(),
-    'height': videoTag.height()
-  });
-  
-  videoTag.bind('loadedmetadata', function(e) {
-    wrapper.css({
-      'width': videoTag.width(),
-      'height': videoTag.height()
-    });
-  });
-
-  if (params.watchUrl) {
-    controls.append(jQuery('<a class="v5-goto" href="' + params.watchUrl + '">'));
-  }
-  if (params.downloadUrl) {
-    controls.append(jQuery('<a class="v5-download" href="' + params.downloadUrl + '">'));
-  }
-  wrapper.append(controls);
 }
 

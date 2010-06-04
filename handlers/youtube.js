@@ -1,10 +1,10 @@
-var YouTubeVideo = function(domObject, url, callback) {
+(function() {
+var YouTubeVideo = function(domObject, url) {
   this.domObject = domObject;
   this.url = url;
-  this.callback = callback;
 };
 
-YouTubeVideo.youTubeRegEx = new RegExp('^http://www.youtube.com/v/');
+YouTubeVideo.youTubeRegEx = new RegExp('^http://www\.youtube\.com/v/');
 YouTubeVideo.prototype.canHandle = function() {
   return YouTubeVideo.youTubeRegEx.test(this.url);
 };
@@ -49,7 +49,7 @@ YouTubeVideo.newFlashvarsSplitter = function(flashVarsRaw) {
 
 YouTubeVideo.prototype.swfVarsRegEx = [
   [new RegExp('<param name=\\\\"flashvars\\\\" value=\\\\"(.*?)\\\\">'), YouTubeVideo.newFlashvarsSplitter],
-  [new RegExp("var swf(?:Args|Config) = \\{(.*?)\\}"), YouTubeVideo.oldSwfVarsSplitter],
+  [new RegExp("var swfArgs = \\{(.*?)\\}"), YouTubeVideo.oldSwfVarsSplitter],
   [new RegExp("'SWF_ARGS': \\{(.*?)\\}"), YouTubeVideo.oldSwfVarsSplitter]
 ];
 
@@ -65,12 +65,11 @@ YouTubeVideo.prototype.videoHDURL = function() {
   return "http://www.youtube.com/get_video?fmt=22&video_id=" + this.videoID + "&t=" + this.videoHash;
 };
 
-YouTubeVideo.prototype.start = function(response) {
+YouTubeVideo.prototype.start = function() {
   this.videoID = this.videoIDRegEx.exec(this.url);
   
   if (this.videoID) {
     this.videoID = this.videoID[1];
-    console.log(this.videoID);
     
     var self = this;
     chrome.extension.sendRequest({action: 'ajax',
@@ -93,7 +92,6 @@ YouTubeVideo.prototype.parseSwfVars = function(response) {
   }
   
   if (flashVarsRaw == null) {
-    console.log('SWF vars not found');
     return; // we haven't found the flashVars
   }
   idx -= 1; // idx gets increased before exiting the loop
@@ -125,7 +123,7 @@ YouTubeVideo.prototype.handleSDVideoResponse = function(response) {
     this.videoRequestStatus[0] = false;
   }
   
-  this.populateParams();
+  this.replaceFlashObjectWithVideo();
 };
 
 YouTubeVideo.prototype.handleHDVideoResponse = function(response) {
@@ -136,17 +134,17 @@ YouTubeVideo.prototype.handleHDVideoResponse = function(response) {
     this.videoRequestStatus[1] = false;
   }
   
-  this.populateParams();
+  this.replaceFlashObjectWithVideo();
 };
 
-YouTubeVideo.prototype.populateParams = function() {
+YouTubeVideo.prototype.replaceFlashObjectWithVideo = function() {
   if (this.videoRequestStatus[1] || this.videoRequestStatus[0]) {
-    var videoUrl = this.videoRequestStatus[1] ? this.videoHDURL() : this.videoSDURL();
-    this.callback({
-      videoUrl    : videoUrl,
-      watchUrl    : this.watchURL(),
-      downloadUrl : videoUrl
-    });
+    var videoURL = this.videoRequestStatus[1] ? this.videoHDURL() : this.videoSDURL();
+    VideoHandlers.replaceFlashObjectWithVideo(this.domObject,
+      videoURL,
+      { watchURL: this.watchURL(), downloadURL: videoURL });
   }
 };
 
+return YouTubeVideo;
+})

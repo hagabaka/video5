@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*"],
-      "js": ["jquery.js", "youtube.js", "jwplayer.js", "vimeo.js", "video5.js"],
+      "js": ["jquery.js", "video5.js"],
       "run_at": "document_start"
     }
   ],
