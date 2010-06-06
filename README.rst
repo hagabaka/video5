@@ -4,6 +4,14 @@ Video5
 Extension for Google Chrome to replace video providers embedded Flash
 players with standard HTML5 video tags.
 
+The official version of the extension is maintained by `Daniel Rodríguez
+Troitiño <http://github.com/drodriguez/video5/>`_, and can be found on
+the `extension gallery
+<https://chrome.google.com/extensions/detail/bnbgfkneigcldienfggfoacjnkbmmhhe>`_.
+If you would like to try experimental features, you may download the
+`source code <http://github.com/hagabaka/video5/archives/master>`_ from
+`GitHub <http://github.com/hagabaka/video5/>`_, and load it as an unpacked
+extension in Google Chrome.
 
 Supported
 ---------
