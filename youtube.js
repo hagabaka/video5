@@ -35,15 +35,34 @@ YouTubeReplacer.prototype.tryURLs = function(urls) {
     }
   }, function(result) {
     if (result.textStatus == 'success') {
-      VideoHandlers.replaceFlashObjectWithVideo(
-        self.domObject,
-        url,
-        {watchURL: self.watchURL(), downloadURL: url}
-      );
+      if (!self.doReplacement(self.domObject, url)) {
+        // On youtube.com pages, the embed element seems to always lose its
+        // parent node, and a different embed element object is found in the
+        // document afterwards. So we have to use the following hack. 
+        // FIXME if this situation happens on a different site, and there are
+        // multiple embed elements, the result might be ugly. youtube.com pages
+        // currently contain only one embed each.
+        var interval = window.setInterval(function() {
+          if(self.doReplacement(jQuery('embed'), url)) {
+            window.clearInterval(interval);
+          }
+        }, 500);
+      }
     } else {
       self.tryURLs(urls);
     }
   });
+}
+
+YouTubeReplacer.prototype.doReplacement = function(domObject, url) {
+  if (domObject.parent().length > 0) {
+    VideoHandlers.replaceFlashObjectWithVideo(domObject, url,
+      { watchURL: this.watchURL(), downloadURL: url }
+    );
+    return true;
+  } else {
+    return false;
+  }
 }
 
 YouTubeReplacer.prototype.replaceWithBestSource = function() {
