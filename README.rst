@@ -10,9 +10,12 @@ Supported
 
 * Youtube
 
-  Youtube.com pages are not modified. You should try `Youtube HTML5 Beta
-  <http://www.youtube.com/html5>`_. Youtube videos embedded on other web
-  pages are supported.
+  Flash videos on youtube.com pages include user pages are
+  replaced. (Currently the video element may not fit well in the page
+  layout, and you may need to use the context menu to control it if
+  the control bar is obscured.) You should also try `Youtube HTML5 Beta
+  <http://www.youtube.com/html5>`_; videos in Youtube's HTML5 player are
+  not modified. Youtube videos embedded on other web pages are also supported.
 
 * JWPlayer
 
@@ -87,9 +90,10 @@ Authors
 -------
 
 Daniel Rodríguez Troitiño (drodriguez)
-  Original implementation including Youtube support
+  Original implementation including support for Youtube videos embedded on
+  other websites.
 
 Yaohan Chen (hagabaka)
-  Ideas and supporting code about the splitting the handlers code.
-  JWPlayer and Vimeo support.
+  Ideas and supporting code about the splitting the handlers code. Support
+  for JWPlayer, Vimeo, and Flash videos on Youtube.com.
 
