@@ -8,13 +8,26 @@ YouTubeReplacer.prototype.watchURL = function() {
   return "http://www.youtube.com/watch?v=" + this.videoID;
 };
 
-YouTubeReplacer.prototype.videoSDURL = function() {
-  return "http://www.youtube.com/get_video?fmt=18&video_id=" + this.videoID + "&t=" + this.videoHash;
-};
+// Based on http://userscripts.org/scripts/review/62634
+//
+// WebM or MP4 first? Users may be using low versions of Chrome which do not
+// support WebM. On the other hand, some setups of Chromium support WebM but
+// not MP4.
+//
+// TODO We may want to use the <source> element to provide alternatives
+YouTubeReplacer.formats = [
+  22, // 'MP4  720p'
+  18, // 'MP4  (SD)'
+  45, // 'WebM 720p'
+  43  // 'WebM 360p'
+]
 
-YouTubeReplacer.prototype.videoHDURL = function() {
-  return "http://www.youtube.com/get_video?fmt=22&video_id=" + this.videoID + "&t=" + this.videoHash;
-};
+YouTubeReplacer.prototype.videoURLs = function(fmts) {
+  var idAndHash = "&video_id=" + this.videoID + "&t=" + this.videoHash;
+  return fmts.map(function(fmt) {
+    return "http://www.youtube.com/get_video?fmt=" + fmt + idAndHash;
+  });
+}
 
 // Try requesting HEAD of the given URLs. If a URL succeeds, call this.replace
 // with the URL and ignore the subsequent URLs; otherwise try the next URL
@@ -66,6 +79,6 @@ YouTubeReplacer.prototype.doReplacement = function(domObject, url) {
 }
 
 YouTubeReplacer.prototype.replaceWithBestSource = function() {
-  this.tryURLs([this.videoHDURL(), this.videoSDURL()])
+  this.tryURLs(this.videoURLs(YouTubeReplacer.formats));
 };
 
