@@ -8,10 +8,12 @@ The official version of the extension is maintained by `Daniel Rodríguez
 Troitiño <http://github.com/drodriguez/video5/>`_, and can be found on
 the `extension gallery
 <https://chrome.google.com/extensions/detail/bnbgfkneigcldienfggfoacjnkbmmhhe>`_.
-If you would like to try experimental features, you may download the
-`source code <http://github.com/hagabaka/video5/archives/master>`_ from
-`GitHub <http://github.com/hagabaka/video5/>`_, and load it as an unpacked
-extension in Google Chrome.
+
+If you would like to try experimental features, you may install it `here
+<http://hagabaka.github.com/video5/video5.crx>`_, or download the `source code
+<http://hagabaka.github.com/video5>`_ and load it as an unpacked extension. You
+should use only one version of the extension at a time, and disable or
+uninstall the other one.
 
 Supported
 ---------

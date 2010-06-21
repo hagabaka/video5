@@ -14,5 +14,6 @@
   "permissions": [
     "http://www.youtube.com/*"
   ],
-  "background_page": "background.html"
+  "background_page": "background.html",
+  "update_url": "http://hagabaka.github.com/video5/updates.xml"
 }
