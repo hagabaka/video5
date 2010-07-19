@@ -15,8 +15,7 @@ var VideoHandlers = {
       (function(u) {
         return function(response) {
           // the special comment allows the eval'd script to be debugged
-          var handler = eval('//@ sourceURL=' + u + '\n' +
-                             response.data + '()');
+          var handler = eval(response.data + '()\n//@ sourceURL=' + u + '\n');
           if (handler) {
             VideoHandlers.handlers.push(handler);
           }
@@ -77,7 +76,7 @@ var VideoHandlers = {
     wrapper.append(controls);
   }
 };
-VideoHandlers.register('youtube', 'vimeo', 'jwplayer');
+VideoHandlers.register('youtube', 'vimeo', 'jwplayer', 'dailymotion');
 
 jQuery(window).bind('DOMNodeInserted', function(e) {
   if (e.target.tagName === 'EMBED' || e.target.tagName === 'OBJECT') {
