@@ -16,13 +16,11 @@ DailyMotionVideo.tryHandling = function(node, url) {
 
 DailyMotionVideo.prototype.start = function() {
   var self = this;
-  console.log(this.watchUrl);
   chrome.extension.sendRequest({action: 'ajax',
     args: {
       type: 'GET',
       url: this.watchUrl
   }}, function(response) {
-    console.log(response.data.length);
     // look for URL escaped "hqURL":"<URL>" on the watch page
     var match = /%22hqURL%22%3A%22(.+?)%22/.exec(response.data);
     if (match) {
