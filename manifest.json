@@ -13,7 +13,8 @@
   ],
   "permissions": [
     "http://www.youtube.com/*",
-    "http://vimeo.com/*"
+    "http://vimeo.com/*",
+    "http://www.dailymotion.com/*"
   ],
   "background_page": "background.html"
 }
